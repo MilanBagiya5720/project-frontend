@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import React from "react";
 import movie1 from "../assets/movie1.jpg";
 import movie2 from "../assets/movie2.jpg";
@@ -6,19 +5,9 @@ import movie3 from "../assets/movie3.jpg";
 import movie4 from "../assets/movie4.jpg";
 import movie5 from "../assets/movie5.jpg";
 import Carousel from "../components/Carousel";
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.1,
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  }),
-};
+import Footer from "../components/Footer";
+import MovieCard from "../components/MovieCard";
+import SectionHeader from "../components/SectionHeader";
 
 const Home: React.FC = () => {
   const heroSlides = [
@@ -27,6 +16,7 @@ const Home: React.FC = () => {
       title: "Unlimited Movies, TV Shows, and More",
       subtitle: "Watch anywhere. Cancel anytime.",
       imageUrl: movie1,
+      cta: "Start Your Free Trial",
     },
     {
       id: 2,
@@ -34,24 +24,28 @@ const Home: React.FC = () => {
       subtitle:
         "Save your favorites easily and always have something to watch.",
       imageUrl: movie2,
+      cta: "Learn More",
     },
     {
       id: 3,
       title: "Watch Everywhere",
       subtitle: "Stream on your phone, tablet, laptop, and TV.",
       imageUrl: movie3,
+      cta: "See Devices",
     },
     {
       id: 4,
-      title: "Watch Everywhere",
-      subtitle: "Stream on your phone, tablet, laptop, and TV.",
+      title: "4K Ultra HD Quality",
+      subtitle: "Experience cinema-quality visuals at home.",
       imageUrl: movie4,
+      cta: "Upgrade Now",
     },
     {
       id: 5,
-      title: "Watch Everywhere",
-      subtitle: "Stream on your phone, tablet, laptop, and TV.",
+      title: "Family Friendly",
+      subtitle: "Create profiles for kids with parental controls.",
       imageUrl: movie5,
+      cta: "Set Up Profiles",
     },
   ];
 
@@ -696,93 +690,44 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f0f1c] via-[#15151f] to-[#0f0f1c] text-white">
+      {/* Hero Carousel */}
       <Carousel slides={heroSlides} />
 
+      {/* Main Content */}
       <div className="px-4 sm:px-10 md:px-16 lg:px-24 xl:px-32 py-16">
-        <motion.h2
-          className="text-4xl font-extrabold mb-16 tracking-wide relative inline-block"
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          Popular Movies
-          <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full animate-pulse"></span>
-        </motion.h2>
+        {/* Popular Movies Section */}
+        <section className="mb-20">
+          <SectionHeader title="Popular Movies" />
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {movies.slice(0, 10).map((movie, index) => (
+              <MovieCard key={movie.imdbid} movie={movie} index={index} />
+            ))}
+          </div>
+        </section>
 
-        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {movies.map((movie, index) => (
-            <motion.div
-              key={movie.imdbid}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 shadow-2xl backdrop-blur-2xl hover:shadow-purple-700/40 transition-all duration-500 group"
-            >
-              {/* Image */}
-              <div className="relative aspect-[2/3] overflow-hidden">
-                <img
-                  src={movie.imageurl[0]}
-                  alt={movie.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
+        {/* Trending Now Section */}
+        <section className="mb-20">
+          <SectionHeader title="Trending Now" />
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {movies.slice(10, 20).map((movie, index) => (
+              <MovieCard key={movie.imdbid} movie={movie} index={index} />
+            ))}
+          </div>
+        </section>
 
-                {/* Watch Button */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileHover={{ opacity: 1, y: 0 }}
-                  className="absolute bottom-5 inset-x-0 flex justify-center transition-all duration-300"
-                >
-                  <motion.button
-                    whileHover={{
-                      scale: 1.1,
-                      boxShadow: "0 0 20px rgba(168, 85, 247, 0.7)",
-                    }}
-                    className="bg-gradient-to-br from-purple-600 to-fuchsia-500 hover:from-fuchsia-600 hover:to-purple-700 text-white text-xs px-5 py-2 rounded-full font-bold shadow-lg"
-                  >
-                    ▶ Watch Now
-                  </motion.button>
-                </motion.div>
-              </div>
-
-              {/* Info */}
-              <div className="p-4 space-y-2">
-                <h3 className="text-white font-semibold text-lg truncate group-hover:text-purple-400 transition-colors duration-300">
-                  {movie.title}
-                </h3>
-                <div className="text-white/60 text-xs flex justify-between items-center">
-                  <span>{movie.released}</span>
-                  <span>⭐ {movie.imdbrating}</span>
-                </div>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {movie.genre.slice(0, 3).map((g, idx) => (
-                    <motion.span
-                      key={idx}
-                      className="bg-gradient-to-r from-purple-700/20 to-pink-700/20 text-white/80 text-[10px] px-2 py-0.5 rounded-full shadow-inner hover:scale-105 transition-transform"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      {g}
-                    </motion.span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {/* New Releases Section */}
+        <section>
+          <SectionHeader title="New Releases" />
+          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {movies.slice(20, 30).map((movie, index) => (
+              <MovieCard key={movie.imdbid} movie={movie} index={index} />
+            ))}
+          </div>
+        </section>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-tr from-black via-zinc-900 to-black py-10 px-8 border-t border-white/10">
-        <div className="container mx-auto max-w-6xl text-center">
-          <p className="text-sm text-gray-500 tracking-wide">
-            © {new Date().getFullYear()} StreamVista. Crafted with ❤️ and
-            fantasy flair.
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
